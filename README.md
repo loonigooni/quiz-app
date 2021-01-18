@@ -1,2 +1,1 @@
-# quiz-app
-Simple web app. Quiz about animals using jQuery
+### Boilerplate app structure for Quiz App project
