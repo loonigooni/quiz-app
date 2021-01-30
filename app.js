@@ -83,7 +83,7 @@ function generateQuizStart() {
     <div class="quiz-start">
       <form>
         <p>How much do you know about animals? Take this quiz and find out!</p>
-        <button type="submit" autofocus>Begin</button>
+        <button type="submit" id="start" autofocus>Begin</button>
       </form>
     </div>
   `;
@@ -133,15 +133,15 @@ function generateQuiz(currentQuestion) {
     <form id="question-form" class="question-form">
       <fieldset>
         <div class="question">
-          <legend> ${currentQuestion.question}</legend>
+          <legend> ${STORE.questions[STORE.currentQuestion].question}</legend>
         </div>
         <div class="options">
           <div class="answers">
             ${generateAnswers()}
           </div>
         </div>
-        <button type="submit" id="submit-answer-btn" tabindex="5">Submit</button>
-        <button type="button" id="next-question-btn" tabindex="6"> Next &gt;></button>
+        <button type="submit" id="submit" tabindex="5">Submit</button>
+        <button type="button" id="next" tabindex="6"> Next &gt;></button>
       </fieldset>
     </form >
   `;
@@ -212,21 +212,57 @@ function render() {
 
 /********** EVENT HANDLER FUNCTIONS **********/
 
-
-
+function quizStartScreen() {
 $('main').submit('.quiz-start form', function(e){
   e.preventDefault();
   console.log("hello");
   $('body').html(generateQuiz(STORE.currentQuestion));
 
-  $('body').html(generateScore(STORE.score));
+  $('body').append(generateScore(STORE.score));
 
-  $('body').html(generateQuestionNumber(STORE.currentQuestion));
+  $('body').append(generateQuestionNumber(STORE.currentQuestion));
 })
+
+$('main').on('click', '#start', function(e){
+  STORE.quizStarted = true;
+})
+}
+
+function questionSubmission() {
+  $('body').on('submit', '#question-form', function (event) {
+    console.log("yo");
+    event.preventDefault();
+    const currentQuestion = STORE.questions[STORE.currentQuestion];
+    let selectedOption = $('input[name=options]:checked').val();
+    //let optionContainerId = `${currentQuestion.answers.findIndex(i => i === selectedOption)}`;
+
+    if (selectedOption === currentQuestion.correctAnswer) {
+      console.log("wassap");
+      STORE.score++;
+      $('body .answers').append(generateAnswers('correct'));
+    }
+ 
+    else {
+      console.log("hello");
+      $('body .answers').append(generateAnswers('incorrect'));
+    }
+    STORE.currentQuestion++;
+    $('#submit').hide();
+    $('input[type=radio]').each(() => {
+      $('input[type=radio]').attr('disabled', true);
+    });
+    $('#next').show();
+
+  });
+}
+
+
 // These functions handle events (submit, click, etc)
 
 
 $(render)
+$(quizStartScreen)
+$(questionSubmission)
 
 
 
