@@ -48,34 +48,40 @@ function generateQuizStart() {
 function generateQuestionNumber() {
   return `
     <div class="question-number">
-      <h4>Question Number: ${store.questionNumber + 1}.</h4>
+      <h4>Question Number: ${store.questionNumber + 1}</h4>
     </div>
   `;
 }
 
 //generate the question, answers using radio input, and submit using form
 function generateQuiz() {
-
   return `
     <form>
       <fieldset>
         <div class="question">
           <legend> ${store.questions[store.questionNumber].question}</legend>
         </div>
-        <div class="answers">
-          ${generateAnswers()}
+        <div id="answers">
+
         </div>
         <button type="sumbit' id="submit">Submit</button>
       </fieldset>
     </form>
+    ${generateAnswers()}
   `;
 }
 
 
 //generate answers using radio input and submit using form
 function generateAnswers() {
-
+  for (let i = 0; i < store.questions[store.questionNumber].answers.length; i++) {
+    console.log("hello");
+    let answer = store.questions[store.questionNumber].answers[i];
+    console.log(answer);
+    $(document).find('#answers').append(`<input type='radio' name='option' value='${answer}'><label for='${answer}'>${answer}</label>`)
+  }
 }
+
 //generate answer feedback and next button
 function generateFeedback() {
 
@@ -121,10 +127,11 @@ function render() {
 }
 /********** EVENT HANDLER FUNCTIONS **********/
 // These functions handle events (submit, click, etc)
-$('main','#start').on('click'), function(){
-  console.log("Hello");
+
+$( "body" ).on("click", "#start", function() {
+  console.log( $( this ).text() );
   store.quizStarted = true;
-  $('main').html(generateQuiz(store.questionNumber));
-  
-}
+  render()
+});
+
 $(render)
