@@ -205,4 +205,9 @@ function restartButton() {
   });
 }
 
-$(render)
+function handleQuiz() {
+  render();
+  restartButton();
+}
+
+$(handleQuiz);
