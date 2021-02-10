@@ -28,7 +28,8 @@ const store = {
   ],
   quizStarted: false,
   questionNumber: 0,
-  score: 0
+  score: 0,
+
 };
 
 /********** TEMPLATE GENERATION FUNCTIONS **********/
@@ -56,35 +57,50 @@ function generateQuestionNumber() {
 //generate the question, answers using radio input, and submit using form
 function generateQuiz() {
   return `
-    <form>
+    <formid="question-form" class="question-form'>
       <fieldset>
         <div class="question">
           <legend> ${store.questions[store.questionNumber].question}</legend>
         </div>
-        <div id="answers">
-
+        <div id="answers" class="answers">
+          <script>generateAnswers()</script>
         </div>
-        <button type="sumbit' id="submit">Submit</button>
+        <button type="submit" id="submit">Submit</button>
+        <button type="button" id="next">Next</button>
       </fieldset>
     </form>
-    ${generateAnswers()}
+    
   `;
 }
-
 
 //generate answers using radio input and submit using form
 function generateAnswers() {
   for (let i = 0; i < store.questions[store.questionNumber].answers.length; i++) {
-    console.log("hello");
     let answer = store.questions[store.questionNumber].answers[i];
     console.log(answer);
-    $(document).find('#answers').append(`<input type='radio' name='option' value='${answer}'><label for='${answer}'>${answer}</label>`)
+    $(document).find('#answers').append(`<input type='radio' name='options' id='options${answer}' value='${answer}'><label for='${answer}'>${answer}</label>`)
   }
 }
 
 //generate answer feedback and next button
-function generateFeedback() {
-
+function generateFeedback(answerStatus) {
+  let correctAnswer = store.questions[store.questionNumber].correctAnswer;
+  let html = '';
+  if (answerStatus === 'correct') {
+    html = `
+    <div class="correct-answer">
+      Correct!
+    </div>
+    `;
+  }
+  else if (answerStatus === 'incorrect') {
+    html = `
+    <div class="incorrect-answer">
+      WRONG! The correct answer is ${correctAnswer}.
+    </div>
+    `;
+  }
+  return html;
 }
 
 //generate current score
@@ -98,7 +114,20 @@ function generateScore() {
 
 //generate final score and restart button
 function generateQuizEnd() {
-
+  return `
+  <div class="results">
+    <form id="restart-quiz">
+      <fieldset>
+          <div class="finale-score">
+            <legend>Your Score is: ${store.score}/${store.questions.length}</legend>
+          </div>
+          <div class="restart-quiz">
+            <button type="button" id="restart">Restart Quiz</button>
+          </div>
+      </fieldset>
+  </form>
+  </div>
+`;
 }
 
 /********** RENDER FUNCTION(S) **********/
@@ -125,13 +154,55 @@ function render() {
     $('main').html(generateQuizEnd());
   }
 }
+
 /********** EVENT HANDLER FUNCTIONS **********/
 // These functions handle events (submit, click, etc)
 
-$( "body" ).on("click", "#start", function() {
-  console.log( $( this ).text() );
+
+$("main").on("click", "#start", function() {
+  console.log( $(this).text() );
   store.quizStarted = true;
-  render()
+  render();
+  $('#next').hide();
 });
+
+$('body').on('click', '#next', (event) => {
+  render();
+  $('#next').hide();
+});
+
+
+$("main").on("click", "#submit", (event) => {
+  event.preventDefault();
+  console.log('submitting answer');
+  let questionNumber = store.questions[store.questionNumber];
+  let selectedOption = $('input[name=options]:checked').val()
+  if (selectedOption === questionNumber.correctAnswer) {
+    store.score++;
+    $(document).find('#answers').append(generateFeedback('correct'));
+  }
+  else {
+    $(document).find('#answers').append(generateFeedback('incorrect'));
+  }
+  store.questionNumber++
+  $('#submit').hide()
+  $('input[type=radio]').each(() => {
+    $('input[type=radio]').attr('disabled', true);
+  });
+  $('#next').show();
+})
+
+function restartQuiz() {
+  store.quizStarted === false;
+  store.questionNumber = 0;
+  store.score = 0;
+}
+
+function restartButton() {
+  $('main').on('click', '#restart', () => {
+    restartQuiz();
+    render();
+  });
+}
 
 $(render)
