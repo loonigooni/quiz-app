@@ -17,8 +17,8 @@ const store = {
     },
     {
       question: 'What is the average length of a pigs orgasm?',
-      answers: ['10 seconds','1 minute','30 minutes','2 hours'],
-      correctAnswer: '30 minutes'
+      answers: ['10 sec','1 min','30 min','2 hours'],
+      correctAnswer: '30 min'
     },
     {
       question: 'How many hours do koalas sleep in a day?',
@@ -49,7 +49,7 @@ function generateQuizStart() {
 function generateQuestionNumber() {
   return `
     <div class="question-number">
-      <h4>Question Number: ${store.questionNumber + 1}</h4>
+      <h4>Question ${store.questionNumber + 1}</h4>
     </div>
   `;
 }
@@ -57,7 +57,8 @@ function generateQuestionNumber() {
 //generate the question, answers using radio input, and submit using form
 function generateQuiz() {
   return `
-    <formid="question-form" class="question-form'>
+  <div class="quiz-form">
+    <form id="question-form" class="question-form">
       <fieldset>
         <div class="question">
           <legend> ${store.questions[store.questionNumber].question}</legend>
@@ -65,11 +66,13 @@ function generateQuiz() {
         <div id="answers" class="answers">
           <script>generateAnswers()</script>
         </div>
-        <button type="submit" id="submit">Submit</button>
-        <button type="button" id="next">Next</button>
+        <div class="buttons">
+          <button type="submit" id="submit">Submit</button>
+          <button type="button" id="next">Next</button>
+        </div
       </fieldset>
     </form>
-    
+  </div> 
   `;
 }
 
@@ -78,7 +81,7 @@ function generateAnswers() {
   for (let i = 0; i < store.questions[store.questionNumber].answers.length; i++) {
     let answer = store.questions[store.questionNumber].answers[i];
     console.log(answer);
-    $(document).find('#answers').append(`<input type='radio' name='options' id='options${answer}' value='${answer}'><label for='${answer}'>${answer}</label>`)
+    $(document).find('#answers').append(`<input type='radio' name='options' class ='options' id='options${answer}' value='${answer}' required><label for='${answer}'>${answer}</label>`)
   }
 }
 
@@ -93,13 +96,14 @@ function generateFeedback(answerStatus) {
     </div>
     `;
   }
-  else if (answerStatus === 'incorrect') {
+  else if(answerStatus === 'incorrect') {
     html = `
     <div class="incorrect-answer">
       WRONG! The correct answer is ${correctAnswer}.
     </div>
     `;
   }
+
   return html;
 }
 
@@ -118,7 +122,7 @@ function generateQuizEnd() {
   <div class="results">
     <form id="restart-quiz">
       <fieldset>
-          <div class="finale-score">
+          <div class="final-score">
             <legend>Your Score is: ${store.score}/${store.questions.length}</legend>
           </div>
           <div class="restart-quiz">
@@ -143,10 +147,7 @@ function render() {
     return;
   }
   else if (store.questionNumber >= 0 && store.questionNumber < store.questions.length) {
-    html = generateQuestionNumber();
-    html += "\n";
-    html += generateScore();
-    html += "\n";
+    html = generateQuestionNumber() + generateScore();
     html += generateQuiz();
     $('main').html(html);
   }
@@ -177,12 +178,19 @@ $("main").on("click", "#submit", (event) => {
   console.log('submitting answer');
   let questionNumber = store.questions[store.questionNumber];
   let selectedOption = $('input[name=options]:checked').val()
+  if (!selectedOption) {
+    $(document).find('.form-error').empty();
+    $(document).find('#answers').append("<p class='form-error'>Please Select an option</p>");
+    return;
+  }
   if (selectedOption === questionNumber.correctAnswer) {
     store.score++;
     $(document).find('#answers').append(generateFeedback('correct'));
+    $(document).find('.form-error').empty();
   }
   else {
     $(document).find('#answers').append(generateFeedback('incorrect'));
+    $(document).find('.form-error').empty();
   }
   store.questionNumber++
   $('#submit').hide()

@@ -6,3 +6,79 @@
   * https://github.com/andreacardybailey/responsive_example/blob/master/styles/responsive-base.css 
   *
 */
+
+.heading {
+  padding: 10px 10px 10px 10px;
+  background-color: cornflowerblue;
+  color: rgb(255, 255, 255);
+  text-align: center;
+}
+
+body {
+  font-family: 'Coda Caption', monospace, sans-serif;
+  margin: 0;
+  background-color: antiquewhite;
+}
+h2 {
+  padding-top: 10px;
+  color: rgb(27, 86, 197);
+}
+
+.quiz-start {
+  margin-top: 15px;
+  background-color:antiquewhite;
+  text-align: center;
+}
+
+.quiz-form {
+  background-color:antiquewhite;
+  text-align: center;
+}
+
+.question-number {
+  display: inline-block;
+}
+
+.score {
+    display: inline-block;
+    float: right;
+}
+
+.question legend{
+  margin: auto;
+}
+.answers {
+  text-align: center;
+}
+
+.options {
+  margin: 10px 10px 10px 10px;
+}
+
+.correct-answer {
+  background-color: rgb(169, 255, 157);
+}
+.incorrect-answer {
+  background-color: rgb(255, 157, 157);
+}
+
+button {
+  background-color: cornflowerblue;
+  color: rgb(255, 255, 255);
+  padding: 10px 20px 10px 20px;
+  margin-bottom: 10px;
+}
+
+.buttons {
+  margin-top: 15px;
+  text-align: center;
+}
+
+.results {
+  text-align: center;
+}
+
+.final-score legend{
+  padding: 20px;
+  margin: auto;
+}
