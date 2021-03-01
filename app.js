@@ -159,46 +159,47 @@ function render() {
 /********** EVENT HANDLER FUNCTIONS **********/
 // These functions handle events (submit, click, etc)
 
-
-$("main").on("click", "#start", function() {
-  console.log( $(this).text() );
-  store.quizStarted = true;
-  render();
-  $('#next').hide();
-});
-
-$('body').on('click', '#next', (event) => {
-  render();
-  $('#next').hide();
-});
-
-
-$("main").on("click", "#submit", (event) => {
-  event.preventDefault();
-  console.log('submitting answer');
-  let questionNumber = store.questions[store.questionNumber];
-  let selectedOption = $('input[name=options]:checked').val()
-  if (!selectedOption) {
-    $(document).find('.form-error').empty();
-    $(document).find('#answers').append("<p class='form-error'>Please Select an option</p>");
-    return;
-  }
-  if (selectedOption === questionNumber.correctAnswer) {
-    store.score++;
-    $(document).find('#answers').append(generateFeedback('correct'));
-    $(document).find('.form-error').empty();
-  }
-  else {
-    $(document).find('#answers').append(generateFeedback('incorrect'));
-    $(document).find('.form-error').empty();
-  }
-  store.questionNumber++
-  $('#submit').hide()
-  $('input[type=radio]').each(() => {
-    $('input[type=radio]').attr('disabled', true);
+function handleQuizStart() {
+  $("main").on("click", "#start", function() {
+    console.log( $(this).text() );
+    store.quizStarted = true;
+    render();
+    $('#next').hide();
   });
-  $('#next').show();
-})
+
+  $('body').on('click', '#next', (event) => {
+    render();
+    $('#next').hide();
+  });
+}
+function handleFeedback() {
+  $("main").on("click", "#submit", (event) => {
+    event.preventDefault();
+    console.log('submitting answer');
+    let questionNumber = store.questions[store.questionNumber];
+    let selectedOption = $('input[name=options]:checked').val()
+    if (!selectedOption) {
+      $(document).find('.form-error').empty();
+      $(document).find('#answers').append("<p class='form-error'>PLEASE SELECT AN OPTION!</p>");
+      return;
+    }
+    if (selectedOption === questionNumber.correctAnswer) {
+      store.score++;
+      $(document).find('#answers').append(generateFeedback('correct'));
+      $(document).find('.form-error').empty();
+    }
+    else {
+      $(document).find('#answers').append(generateFeedback('incorrect'));
+      $(document).find('.form-error').empty();
+    }
+    store.questionNumber++
+    $('#submit').hide()
+    $('input[type=radio]').each(() => {
+      $('input[type=radio]').attr('disabled', true);
+    });
+    $('#next').show();
+  })
+}
 
 function restartQuiz() {
   store.quizStarted === false;
@@ -215,6 +216,8 @@ function restartButton() {
 
 function handleQuiz() {
   render();
+  handleQuizStart()
+  handleFeedback()
   restartButton();
 }
 

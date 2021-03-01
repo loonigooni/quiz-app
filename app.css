@@ -19,6 +19,9 @@ body {
   margin: 0;
   background-color: antiquewhite;
 }
+main {
+  font-size: 24px;
+}
 h2 {
   padding-top: 10px;
   color: rgb(27, 86, 197);
@@ -31,17 +34,20 @@ h2 {
 }
 
 .quiz-form {
+  font-size: 28px;
   background-color:antiquewhite;
   text-align: center;
 }
 
 .question-number {
   display: inline-block;
+  margin-left: 20px;
 }
 
 .score {
     display: inline-block;
     float: right;
+    margin-right: 20px;
 }
 
 .question legend{
@@ -51,10 +57,16 @@ h2 {
   text-align: center;
 }
 
-.options {
-  margin: 10px 10px 10px 10px;
+input[type='radio'] {
+  transform: scale(1.5);
 }
-
+.options {
+  margin: 20px;
+  padding: 10px;
+}
+.form-error {
+  background-color: rgb(255, 255, 255);
+}
 .correct-answer {
   background-color: rgb(169, 255, 157);
 }
